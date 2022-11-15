@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "orm-test": "ts-node src/repositories/orm/index.ts",
+    "build": "npx tsc",
+    "start": "ts-node ./src/server.ts"
   },
   "keywords": [],
   "author": "",
