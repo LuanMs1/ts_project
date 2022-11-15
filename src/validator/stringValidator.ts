@@ -3,8 +3,8 @@ class StringValidator {
 
     constructor(name: string) {
         this.name = name;
-        const reg = /^([a-z]{1,})([ ]{1}[a-z]{1,}){0,}$/gim;
-        const valid = reg.test(this.name);
+        const reg: RegExp = /^([a-z]{1,})([ ]{1}[a-z]{1,}){0,}$/gim;
+        const valid: boolean = reg.test(this.name);
         if (!valid) {
             throw new Error("Nome inválido!");
         }
