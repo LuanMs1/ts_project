@@ -1,9 +1,11 @@
-import router from './routes/routes'
-
-import express from 'express';
+import router from "./routes/routes.js";
+import express, { json } from "express";
+import cors from "cors";
 
 const app = express();
 
-app.use(router)
+app.use(json());
+app.use(cors());
+app.use(router);
 
-app.listen(8000, () => console.log('rodando'));
+app.listen(8000, () => console.log("rodando"));

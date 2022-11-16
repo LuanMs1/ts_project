@@ -1,12 +1,12 @@
-import {Router} from "express";
+import { Router } from "express";
 
-import teams from './teamsRoutes'
+import teams from "./teamsRoutes.js";
 
-import users from './usersRoutes'
+import users from "./usersRoutes.js";
 
-const router = Router()
+const router = Router();
 
-router.use(users)
-router.use(teams)
+router.use(users);
+router.use(teams);
 
-export default router
+export default router;
