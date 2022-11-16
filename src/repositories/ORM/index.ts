@@ -41,10 +41,6 @@ export class Postegres {
                     values.push(filter[key]);
                     countValues += 1;
                 }
-                //{"nome": "fulano", "email": "test@gm.com"}
-                // $1 = $3 AND $2 = $4
-                // ["nome", "email", "fulano", "test@gm.com"]
-                // ["$1 = $2", "$3 = $4"].join(' AND ');
                 dolarOptions = dolarOptions.join(" AND ");
                 dolarOptions = `WHERE ${dolarOptions}`;
             }else {
