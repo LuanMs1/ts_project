@@ -1,7 +1,7 @@
-CREATE TABLE "public.equipe" (
-	"id" serial NOT NULL,
-	"name" serial(255) NOT NULL,
-	"leader" serial(255) NOT NULL,
+CREATE TABLE "equipe" (
+	"id" varchar(255) NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"leader" varchar(255) NOT NULL,
 	CONSTRAINT "equipe_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
@@ -9,15 +9,15 @@ CREATE TABLE "public.equipe" (
 
 
 
-CREATE TABLE "public.usuario" (
-	"id" serial NOT NULL,
-	"username" serial(255) NOT NULL,
-	"email" serial(255) NOT NULL,
-	"first_name" serial(255) NOT NULL,
-	"last_name" serial(255) NOT NULL,
-	"password" serial(255) NOT NULL,
-	"squad" serial(255),
-	"is_adm" serial(255) NOT NULL,
+CREATE TABLE "usuario" (
+	"id" varchar(255) NOT NULL,
+	"username" varchar(255) NOT NULL,
+	"email" varchar(255) NOT NULL,
+	"first_name" varchar(255) NOT NULL,
+	"last_name" varchar(255) NOT NULL,
+	"password" varchar(255) NOT NULL,
+	"squad" varchar(255),
+	"is_adm" boolean NOT NULL,
 	CONSTRAINT "usuario_pk" PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
