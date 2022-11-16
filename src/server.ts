@@ -1,9 +1,9 @@
-import router from './routes/routes'
+import router from "./routes/routes.js";
 
-import express from 'express';
+import express from "express";
 
 const app = express();
 
-app.use(router)
+app.use(router);
 
-app.listen(8000, () => console.log('rodando'));
+app.listen(8000, () => console.log("rodando"));

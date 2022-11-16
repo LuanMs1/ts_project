@@ -1,4 +1,4 @@
-import registerUser from "../controller/registerUser";
+import registerUser from "../controller/registerUser.js";
 
 import { Router } from "express";
 
