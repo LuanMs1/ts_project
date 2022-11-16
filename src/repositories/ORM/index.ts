@@ -24,7 +24,7 @@ export class Postegres {
     public async select(
         table: string,
         columns: Array<string> = ["*"],
-        options?: options<usuario>
+        options?: options<Usuario>
     ): Promise<repoRes<any[]>> {
         // options = {
         //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
