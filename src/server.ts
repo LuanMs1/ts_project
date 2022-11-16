@@ -27,20 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false })); //we ate using extended: fa
 app.use(cors());
 app.use(json());
 app.use(router);
-app.use(passport.initialize()); //here we are initializing passport middleware 
-app.use(passport.session()); //here we are telling passport to use the session that we configured above to manage the user session 
-app.use(session({ //here we are configuring express-session
-    genid: (req) => {
-        // genid is a function that generates a new session ID for a new session and stores it in the cookie that is sent to the client in the response to the request.
-        console.log('Inside the session middleware genid')
-        console.log(`Request object sessionID from client: ${req.sessionID}`) // sessionID is a property that contains the session ID of the current session.
-        return id
-    },
-    // store: new fileStoreOptions(), // store is a property that contains the session store instance, defaults to a new MemoryStore instance.
-    secret: 'keyboard cat', //secret is a string that is used to sign the session ID cookie.
-    resave: false, //resave is a boolean that forces the session to be saved back to the session store, even if the session was never modified during the request.
-    saveUninitialized: true //saveUninitialized is a boolean that forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
-}));
+
 
 //configuring passport middleware to use local strategy(Username and password)
 passport.use(new LocalStrategy(
@@ -77,5 +64,23 @@ passport.deserializeUser((id, done) => {
         .then((res: any) => done(null, res.data)) //here we are getting the user from the response data and passing it to the done method
         .catch((error: any) => done(error, false)) //here we are passing the error to the done method
 });
+
+
+app.use(session({ //here we are configuring express-session
+    genid: (req) => {
+        // genid is a function that generates a new session ID for a new session and stores it in the cookie that is sent to the client in the response to the request.
+        console.log('Inside the session middleware genid')
+        console.log(`Request object sessionID from client: ${req.sessionID}`) // sessionID is a property that contains the session ID of the current session.
+        return id
+    },
+    // store: new fileStoreOptions(), // store is a property that contains the session store instance, defaults to a new MemoryStore instance.
+    secret: 'keyboard cat', //secret is a string that is used to sign the session ID cookie.
+    resave: false, //resave is a boolean that forces the session to be saved back to the session store, even if the session was never modified during the request.
+    saveUninitialized: true //saveUninitialized is a boolean that forces a session that is "uninitialized" to be saved to the store. A session is uninitialized when it is new but not modified.
+}));
+app.use(passport.initialize()); //here we are initializing passport middleware 
+app.use(passport.session()); //here we are telling passport to use the session that we configured above to manage the user session 
+
+
 
 app.listen(8000, () => console.log('rodando na porta 8000'));
