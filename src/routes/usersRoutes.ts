@@ -1,4 +1,4 @@
-import registerUser from "../controller/registerUser.js";
+import * as controller from "../controller/index.js";
 
 import { Router } from "express";
 
@@ -8,7 +8,7 @@ users.get("/users");
 users.get("/users/me");
 users.get("/users/:user_id");
 
-users.post("/users", registerUser);
+users.post("/users", controller.registerUser);
 
 users.patch("/users/:user_id");
 
