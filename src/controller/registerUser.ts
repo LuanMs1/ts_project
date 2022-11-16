@@ -7,7 +7,7 @@ export default function registerUser(req: Request, res: Response) {
 
     try {
         register(userData);
-        res.status(202).send("Cadastrado com sucesso!");
+        res.status(202).send("Usuário cadastrado com sucesso!");
         return;
     } catch (error: any) {
         res.status(error.status).send(error.message);
