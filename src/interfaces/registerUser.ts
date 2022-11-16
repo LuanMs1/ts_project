@@ -1,4 +1,5 @@
 export default interface registerUser {
+    id?: string;
     username: string;
     email: string;
     first_name: string;
