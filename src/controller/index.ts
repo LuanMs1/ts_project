@@ -1,3 +1,4 @@
 import registerUser from "./registerUser.js";
+import registerTeam from "./registerTeam.js";
 
-export { registerUser };
+export { registerUser,  registerTeam };
