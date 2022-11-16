@@ -1,5 +1,6 @@
 // Arquivo para funções gerais de acesso ao PostegreSQL
 import { Pool, PoolConfig } from "pg";
+import { repoRes } from "../../interfaces/repositoriesInterfaces";
 // import * as dotenv from 'dotenv';
 // dotenv.config()
 const poolConfig : PoolConfig = {
@@ -23,7 +24,7 @@ export class Postegres{
     }
 
     // métodos para conecção com banco de dados
-    public async select(table : string, columns: Array<string> = ['*'], options?: options<usuario> ){
+    public async select(table : string, columns: Array<string> = ['*'], options?: options<usuario> ) : Promise<repoRes<any[]>>{
         // options = {
         //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
         // }
@@ -37,6 +38,7 @@ export class Postegres{
             dolarColumns = dolarColumns.toString();
             values.push(... columns);
             let dolarOptions : Array<string> | string = [];
+
             if (options) {
                 let countValues = values.length + 1;
                 const filter : any = options.filter_and;
@@ -46,7 +48,7 @@ export class Postegres{
                     dolarOptions.push(`$${countValues} = $${countValues + 1}`);
                     // ["$3 = $4"]
                     values.push(key);
-                    values.push(filter[key]);
+                    values.push(... filter[key]);
                     countValues += 2;
                 }
                 //{"nome": "fulano", "email": "test@gm.com"}
@@ -71,9 +73,9 @@ export class Postegres{
 
 
             const dbRes = await this.pool.query(qr);
-            return {err: null, data: dbRes};
+            return {err: null, data: dbRes.rows};
         }catch(err){
-            return err;
+            return {err: err as Error, data: null};
         }
     };
 
@@ -90,5 +92,5 @@ export class Postegres{
     };
 
 }
-const orm = new Postegres;
-orm.select('usuario', ["username", "email"], {filter_and: {nome: "test", password: "1234"}}).then(res => console.log(res));
+// const orm = new Postegres;
+// orm.select('usuario', ["username", "email"], {filter_and: {nome: "test", password: "1234"}}).then(res => console.log(res));

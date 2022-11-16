@@ -1,7 +1,30 @@
 // Arquivo para acesso direto ao banco de dados
 import { Postegres } from "./ORM/index";
+import {Usuario, Equipe, tables, table, uuid, repoRes} 
+    from '../interfaces/repositoriesInterfaces';
 
-const orm = new Postegres;
+// user examples:
+const user1 : Usuario = {
+    id: '1a',
+    username: 'User 1',
+    email: "teste1@gmail.com",
+    first_name: "Fulano1",
+    last_name: "cicrano1",
+    password: "criptografado",
+    squad: null,
+    is_adm: false,
+}
+
+const user2 : Usuario = {
+    id: '2a',
+    username: 'User 2',
+    email: "teste2@gmail.com",
+    first_name: "Fulano2",
+    last_name: "cicrano2",
+    password: "criptografado",
+    squad: "squadId",
+    is_adm: true,
+}
 
 //Classe para construir os acessos ao banco
 export class Database {
@@ -9,23 +32,70 @@ export class Database {
     private tables = ['usuario', 'equipe'];
     constructor(){}
 
-    // metodo para obter usuário do banco de dados a partir de email
-    get_user(email: string){
+    /** Get all users in the database */
+    public async getUsers(): Promise<repoRes<table>>{
 
         try{
             // seleciona senha de usuáro a partir de email
-            // const res = orm.select("usuario", ["nome", "email"], {'email': email});
-            orm.insert();
-            orm.delete()
+            const res = this.orm.select("usuario", ['*']);
 
-            return {error: null, data: "res.data"};
+            return { err: null, data: [ user1, user2 ] };
         }catch(err){
-            return {error: err, data: null};
+            return {err: err as Error, data: null};
+        }
+    }
+    
+    /** Get any user by id. Especific to logged user */
+    public async getMyUsers( userId : uuid ): Promise<repoRes<table>>{
+
+        try{
+            if (!userId) throw new Error('Id necessário');
+            return { err: null, data: [ user1 ] };
+        }catch(err){
+            return {err: err as Error, data: null};
         }
     }
 
-    get_team(email: string){
-        return;
+    /** Get any user by id. */
+    public async getUserById( userId : uuid ): Promise<repoRes<table>>{
+
+        try{
+            if (!userId) throw new Error('Id necessário');
+            return { err: null, data: [ user1 ] };
+        }catch(err){
+            return {err: err as Error, data: null};
+        }
     }
 
+    /** Register user. Information of user required */
+    public async postUser( infos : Usuario): Promise<repoRes<table>>{
+
+        try{
+            return {err: null, data: null};
+        }catch(err){
+
+            return {err: err as Error, data: null};
+        }
+    }
+
+    /** Update a user information */
+    public async updateUser( infos : Usuario): Promise<repoRes<Usuario>> {
+        try{
+            if(!infos) throw new Error('Necessária informações de usuário')
+            return {err: null, data: infos};
+        }catch(err){
+            return {err: err as Error, data: null};
+        }
+    }
+
+    /** delete a user by id */
+    public async deleteUser( userId : uuid): Promise<repoRes<table>>{
+        try{
+            if (!userId) throw new Error('Id necessário');
+            return {err: null, data: null};
+        }catch(err){
+            return {err: err as Error, data: null};
+        }
+
+    }
 }
