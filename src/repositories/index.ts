@@ -1,5 +1,5 @@
 // Arquivo para acesso direto ao banco de dados
-import { Postegres } from "./ORM/index.js";
+import { Postegres } from "./ORM/index"
 import {
     Usuario,
     Equipe,
