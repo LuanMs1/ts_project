@@ -37,9 +37,9 @@ export class Database {
 
         try{
             // seleciona senha de usuáro a partir de email
-            const res = this.orm.select("usuario", ['*']);
-
-            return { err: null, data: [ user1, user2 ] };
+            const res  = await this.orm.select("usuario", ['*']);
+            if (res.err) throw res.err;
+            return { err: null, data: res.data};
         }catch(err){
             return {err: err as Error, data: null};
         }
@@ -50,7 +50,8 @@ export class Database {
 
         try{
             if (!userId) throw new Error('Id necessário');
-            return { err: null, data: [ user1 ] };
+            const res = await this.orm.select("usuario", ['*'], {filter_and: {'id' : userId}})
+            return { err: null, data: res.data };
         }catch(err){
             return {err: err as Error, data: null};
         }
@@ -61,7 +62,8 @@ export class Database {
 
         try{
             if (!userId) throw new Error('Id necessário');
-            return { err: null, data: [ user1 ] };
+            const res = await this.orm.select("usuario", ['*'], {filter_and: {'id' : userId}})
+            return { err: null, data: res.data };
         }catch(err){
             return {err: err as Error, data: null};
         }
@@ -99,3 +101,6 @@ export class Database {
 
     }
 }
+
+const db = new Database;
+db.getUsers().then(res => console.log(res));
