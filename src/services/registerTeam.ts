@@ -11,7 +11,7 @@ export default function register(teamData: registerTeam) {
         const id = uuid();
         teamData.id = id;
 
-        // const data = new Database.postUser(userData);
+        // const data = new Database.postTeam(teamData);
         // if(data.err !== null) {
         //     throw {
         //         status: 500,
