@@ -3,7 +3,7 @@ import * as validator from "../validator/validators.js";
 import { registerUser } from "../interfaces/interfaces.js";
 import { Database } from "../repositories/index.js";
 
-export default function register(userData: registerUser) {
+export default async function register(userData: registerUser) {
     try {
         new validator.StringValidator(userData.username, "Username");
         new validator.EmailValidator(userData.email);
@@ -15,16 +15,17 @@ export default function register(userData: registerUser) {
         const id = uuid();
         userData.id = id;
 
-        // const data = new Database.postUser(userData);
-        // if(data.err !== null) {
-        //     throw {
-        //         status: 500,
-        //         message: "Erro no banco de dados!",
-        //     };
-        // }
+        const db = new Database();
+        const data = await db.postUser(userData);
+        if (data.err !== null) {
+            throw {
+                status: 500,
+                message: "Erro no banco de dados!",
+            };
+        }
     } catch (error: any) {
         throw {
-            status: error.status,
+            status: error.status || 500,
             message: error.message,
         };
     }

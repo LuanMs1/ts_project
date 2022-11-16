@@ -4,7 +4,7 @@ import  {repoRes, Usuario}  from "../../interfaces/repositoriesInterfaces";
 
 // import * as dotenv from 'dotenv';
 // dotenv.config()
-const poolConfig : PoolConfig = {
+const poolConfig: PoolConfig = {
     host: "localhost",
     port: 5432,
     database: "db_typescript",
@@ -14,18 +14,22 @@ const poolConfig : PoolConfig = {
 interface options<T>{
     filter_and: T,
 }
-export class Postegres{
-    private pool : Pool;
-    constructor(){
+export class Postegres {
+    private pool: Pool;
+    constructor() {
         this.pool = new Pool(poolConfig);
     }
 
     // métodos para conecção com banco de dados
-    public async select(table : string, columns: Array<string> , options?: options<Usuario> ) : Promise<repoRes<any[]>>{
+    public async select(
+        table: string,
+        columns: Array<string> = ["*"],
+        options?: options<usuario>
+    ): Promise<repoRes<any[]>> {
         // options = {
         //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
         // }
-        try{
+        try {
             const values: Array<string> = [];
             let dolarOptions : Array<string> | string = [];
             if (options) {
@@ -57,22 +61,21 @@ export class Postegres{
             }
 
             const dbRes = await this.pool.query(qr);
-            return {err: null, data: dbRes.rows};
-        }catch(err){
-            return {err: err as Error, data: null};
+            return { err: null, data: dbRes.rows };
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
-    };
+    }
 
-    public insert(){
+    public insert() {
         return;
-    };
+    }
 
-    public delete(){
+    public delete() {
         return;
-    };
+    }
 
-    public update(){
+    public update() {
         return;
-    };
-
+    }
 }
