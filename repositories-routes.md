@@ -19,8 +19,9 @@ Database.getUserById( _idUsuario );
 
 Database.postUser( _inputs );
     -Cadastra usuário
-    -recebe:
+    -_inputs:
         {
+            "uuid" REQUIRED
             "username" REQUIRED,
 	        "email" REQUIRED,
 	        "first_name" REQUIRED,
@@ -33,18 +34,21 @@ Database.postUser( _inputs );
 
 Database.updateUser( _idUsuario, _inputs);
     -Atualiza usuário
-    -recebe:
+    -_inputs:
         {
-            "username" REQUIRED,
-	        "email" REQUIRED,
-	        "first_name" REQUIRED,
-	        "last_name" REQUIRED,
-	        "password" REQUIRED,
+            "username" ,
+	        "email" ,
+	        "first_name" ,
+	        "last_name" ,
+	        "password" ,
 	        "squad",
-	        "is_adm" REQUIRED,
+	        "is_adm" ,
         }
-    -retorna erro ou null;
+    -retorna erro ou dados alterados;
 
 Database.deleteUser( _idUsuario );
-    -Deleta usuário
+    - Deleta usuário
     - retorna erro ou null;
+
+### EQUIPE
+
