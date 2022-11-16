@@ -9,9 +9,12 @@ const poolConfig : PoolConfig = {
     user: "postgres",
     password: "080596",
 };
-
-interface options{
-    filter_and: Array<string>,
+interface usuario{
+    nome?: string,
+    password?: string | null, 
+}
+interface options<T>{
+    filter_and: T,
 }
 export class Postegres{
     private pool : Pool;
@@ -20,25 +23,44 @@ export class Postegres{
     }
 
     // métodos para conecção com banco de dados
-    public async select(table : string, columns: Array<string> = ['*'], options: options | undefined ){
-        // {
-        //     filter_and: []
+    public async select(table : string, columns: Array<string> = ['*'], options?: options<usuario> ){
+        // options = {
+        //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
         // }
         try{
-            const values = [];
+            const values: Array<string> = [];
             const columnSize = columns.length;
             let dolarColumns : any | string = []; // [$1, $2]
             for (let i = 0; i < columnSize; i++){
                 dolarColumns.push(`$${i + 1} `);
             }
             dolarColumns = dolarColumns.toString();
-            // dolarColumns = $1, $2
             values.push(... columns);
-            //values ['username', 'email']
-            // values.push(table);
+            let dolarOptions : Array<string> | string = [];
+            if (options) {
+                let countValues = values.length + 1;
+                const filter : any = options.filter_and;
+                const optionsKeys = Object.keys(filter);
+                const optionsValues = Object.values(filter);
+                for (let key in filter){
+                    dolarOptions.push(`$${countValues} = $${countValues + 1}`);
+                    // ["$3 = $4"]
+                    values.push(key);
+                    values.push(filter[key]);
+                    countValues += 2;
+                }
+                //{"nome": "fulano", "email": "test@gm.com"}
+                // $1 = $3 AND $2 = $4
+                // ["nome", "email", "fulano", "test@gm.com"]
+                // ["$1 = $2", "$3 = $4"].join(' AND ');
+            }
+            dolarOptions = dolarOptions.join(" AND ");
+            console.log(dolarOptions)
+            console.log(values)
             const queryText = `
                 SELECT ${dolarColumns}
                 FROM ${table}
+                WHERE ${dolarOptions}
             `
             const qr = {
                 text: queryText,
@@ -53,7 +75,6 @@ export class Postegres{
         }catch(err){
             return err;
         }
-        // return {err: null, data: response}; // objeto com erro ou resposta
     };
 
     public insert(){
@@ -69,6 +90,5 @@ export class Postegres{
     };
 
 }
-
 const orm = new Postegres;
-orm.select('usuario', ["username", "email"]).then(res => console.log(res));
+orm.select('usuario', ["username", "email"], {filter_and: {nome: "test", password: "1234"}}).then(res => console.log(res));

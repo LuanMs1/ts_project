@@ -14,7 +14,7 @@ export class Database {
 
         try{
             // seleciona senha de usuáro a partir de email
-            const res = orm.select("usuario", ["nome", "email"], {'email': email});
+            // const res = orm.select("usuario", ["nome", "email"], {'email': email});
             orm.insert();
             orm.delete()
 
