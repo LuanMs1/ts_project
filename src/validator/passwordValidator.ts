@@ -4,8 +4,16 @@ class PasswordValidator {
     constructor(password: string) {
         this.password = password;
 
-        if (this.password.length === 0 || this.password.length > 20) {
-            throw new Error("Senha inválida!");
+        if (this.password === undefined) {
+            throw { message: "Forneça uma senha!" };
+        }
+
+        if (this.password.length === 0) {
+            throw { message: "Senha inválida!" };
+        }
+
+        if (this.password.length > 20) {
+            throw { message: "A senha deve ter no máximo 20 caracteres!" };
         }
     }
 }

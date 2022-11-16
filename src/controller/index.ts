@@ -1,1 +1,3 @@
-// Nivel de extração de dados
+import registerUser from "./registerUser.js";
+
+export { registerUser };

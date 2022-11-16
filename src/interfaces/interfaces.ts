@@ -1,6 +1,6 @@
-import registerUser from "./registerUser";
-import registerTeam from "./registerTeam";
-import attUser from "./attUser";
-import attTeam from "./attTeam";
+import registerUser from "./registerUser.js";
+import registerTeam from "./registerTeam.js";
+import attUser from "./attUser.js";
+import attTeam from "./attTeam.js";
 
 export { registerUser, registerTeam, attUser, attTeam };
