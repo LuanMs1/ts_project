@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import * as validator from "../validator/validators.js";
 import { registerUser } from "../interfaces/interfaces.js";
 import { Database } from "../repositories/index.js";
+import bcrypt from "bcrypt"; 
 
 export default async function register(userData: registerUser) {
     try {
@@ -15,6 +16,9 @@ export default async function register(userData: registerUser) {
         const id = uuid();
         userData.id = id;
 
+        const hashedPassword = await bcrypt.hash(userData.password, 10);
+        userData.password = hashedPassword;
+        
         const db = new Database();
         const data = await db.user.post(userData);
         if (data.err !== null) {

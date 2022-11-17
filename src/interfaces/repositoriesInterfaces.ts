@@ -22,7 +22,7 @@ interface Equipe{
 
 interface repoRes<T> {
     err: Error | null,
-    data: T | null, 
+    data: Array<T> | null, 
 };
 interface options{
     filter_and: object,
