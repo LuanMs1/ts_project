@@ -26,7 +26,7 @@ export default async function attUserService(
         userData.id = userId;
 
         const db = new Database();
-        const data = await db.updateUser(userData);
+        const data = await db.user.update(userData, userId);
         if (data.err !== null) {
             throw {
                 status: 500,

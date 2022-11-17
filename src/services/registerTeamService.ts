@@ -11,14 +11,14 @@ export default async function register(teamData: registerTeam) {
         const id = uuid();
         teamData.id = id;
 
-        // const db = new Database();
-        // const data = await db.postTeam(teamData);
-        // if(data.err !== null) {
-        //     throw {
-        //         status: 500,
-        //         message: data.err.message,
-        //     };
-        // }
+        const db = new Database();
+        const data = await db.team.post(teamData);
+        if(data.err !== null) {
+            throw {
+                status: 500,
+                message: data.err.message,
+            };
+        }
         return;
     } catch (error: any) {
         throw {

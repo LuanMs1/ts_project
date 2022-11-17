@@ -3,7 +3,7 @@ import { Database } from "../repositories/index.js";
 export default async function deleteUserService(userId: string) {
     try {
         const db = new Database();
-        const data = await db.deleteUser(userId);
+        const data = await db.user.del(userId);
         if (data.err !== null) {
             throw data.err;
         }
