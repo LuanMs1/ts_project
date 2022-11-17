@@ -1,16 +1,16 @@
 // Arquivo para funções gerais de acesso ao PostegreSQL
 import { Pool, PoolConfig } from "pg";
-import  {repoRes, Usuario}  from "../../interfaces/repositoriesInterfaces";
+import { repoRes, Usuario } from "../../interfaces/repositoriesInterfaces";
 import { options } from "../../interfaces/repositoriesInterfaces";
 
-import * as dotenv from 'dotenv';
-dotenv.config()
+import * as dotenv from "dotenv";
+dotenv.config();
 const poolConfig = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     database: process.env.DB_DATABASE,
     user: process.env.DB_USER,
-    password: '123456',
+    password: process.env.DB_PASSWORD,
 };
 export class Postegres {
     private pool: Pool;
@@ -83,23 +83,26 @@ export class Postegres {
         }
     }
 
-    public async delete(table:string, options: options) : Promise<repoRes<any[]>> {
+    public async delete(
+        table: string,
+        options: options
+    ): Promise<repoRes<any[]>> {
         try {
-            if(!options){
-                throw new Error('deu ruim, mande um options');
+            if (!options) {
+                throw new Error("deu ruim, mande um options");
             }
-            const keys = Object.keys(options.filter_and)
-            const values = Object.values(options.filter_and)
-            let dolarValues : String[] = []
-            let dolarOptions : string = ''
-            for(let i in values) {
-                dolarValues.push(`${keys[i]} = $${parseInt(i) + 1}`)
+            const keys = Object.keys(options.filter_and);
+            const values = Object.values(options.filter_and);
+            let dolarValues: String[] = [];
+            let dolarOptions: string = "";
+            for (let i in values) {
+                dolarValues.push(`${keys[i]} = $${parseInt(i) + 1}`);
             }
 
-            if(values.length > 1) {
-                dolarOptions = dolarValues.join(' AND ')
+            if (values.length > 1) {
+                dolarOptions = dolarValues.join(" AND ");
             } else {
-                dolarOptions = dolarValues.toString()
+                dolarOptions = dolarValues.toString();
             }
 
             // coluna = $1 AND coluna2 = $2
@@ -108,55 +111,61 @@ export class Postegres {
                 WHERE (
                     ${dolarOptions}
                 )
-            `
+            `;
             console.log(queryText);
             console.log(values);
-            const dbRes = await this.pool.query(queryText, values);            
-            return {err: null, data: null};
+            const dbRes = await this.pool.query(queryText, values);
+            return { err: null, data: null };
         } catch (error) {
-            return {err: null, data: null}            
+            return { err: null, data: null };
         }
     }
 
-    public async update(table:string, infos:object, options?: options) : Promise<repoRes<any[]>> {
-        try{
-            if(!options){
-                throw new Error('deu ruim, mande um options');
+    public async update(
+        table: string,
+        infos: object,
+        options?: options
+    ): Promise<repoRes<any[]>> {
+        try {
+            if (!options) {
+                throw new Error("deu ruim, mande um options");
             }
-            const columns = Object.keys(infos)
-            const columnValue = Object.values(infos)
+            const columns = Object.keys(infos);
+            const columnValue = Object.values(infos);
             const optionsKeys = Object.keys(options.filter_and);
             const optionsValues = Object.values(options.filter_and);
-            const dolarValues : string[] = []; 
-            let dolarOptions : string | string[] = []; 
-            for(let i in columns){
-                dolarValues.push(`${columns[i]} = $${parseInt(i) + 1}`) 
+            const dolarValues: string[] = [];
+            let dolarOptions: string | string[] = [];
+            for (let i in columns) {
+                dolarValues.push(`${columns[i]} = $${parseInt(i) + 1}`);
             }
             const length = dolarValues.length;
-            for(let i in optionsKeys) {
-                dolarOptions.push(`${optionsKeys[i]} = $${parseInt(i) + length + 1}`)
+            for (let i in optionsKeys) {
+                dolarOptions.push(
+                    `${optionsKeys[i]} = $${parseInt(i) + length + 1}`
+                );
             }
-            const values = columnValue.concat(optionsValues)
+            const values = columnValue.concat(optionsValues);
 
-            if(optionsKeys.length > 1) {
-                dolarOptions = dolarOptions.join(' AND ')
+            if (optionsKeys.length > 1) {
+                dolarOptions = dolarOptions.join(" AND ");
             } else {
-                dolarOptions = dolarOptions.toString()
+                dolarOptions = dolarOptions.toString();
             }
-  
+
             const queryText = `
                     UPDATE ${table}
-                    SET ${dolarValues.join(', ')}
+                    SET ${dolarValues.join(", ")}
                     WHERE ${dolarOptions}
                     RETURNING *
-            `
+            `;
 
             const dbRes = await this.pool.query(queryText, values);
 
-            console.log(dbRes)
-            return {err: null, data: dbRes.rows[0]};
-        }catch(err){
-            return {err: err as Error, data: null}
+            console.log(dbRes);
+            return { err: null, data: dbRes.rows[0] };
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 }
