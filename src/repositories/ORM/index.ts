@@ -10,7 +10,7 @@ const poolConfig = {
     port: process.env.DB_PORT,
     database: process.env.DB_DATABASE,
     user: process.env.DB_USER,
-    password: process.env.PASSWORD,
+    password: '123456',
 };
 export class Postegres {
     private pool: Pool;
@@ -85,29 +85,78 @@ export class Postegres {
 
     public async delete(table:string, options: options) : Promise<repoRes<any[]>> {
         try {
-            const keys = Object.values(infos)
-            const values = Object.values(infos)
-            let dolarValues = String[]
-            let algumacoisa = ''
+            if(!options){
+                throw new Error('deu ruim, mande um options');
+            }
+            const keys = Object.keys(options.filter_and)
+            const values = Object.values(options.filter_and)
+            let dolarValues : String[] = []
+            let dolarOptions : string = ''
             for(let i in values) {
-                dolarValues.push(`$${parseInt(i) + 1}`)
+                dolarValues.push(`${keys[i]} = $${parseInt(i) + 1}`)
             }
 
+            if(values.length > 1) {
+                dolarOptions = dolarValues.join(' AND ')
+            } else {
+                dolarOptions = dolarValues.toString()
+            }
+
+            // coluna = $1 AND coluna2 = $2
             const queryText = `
                 DELETE FROM ${table}
                 WHERE (
-                    ${algumacoisa}
+                    ${dolarOptions}
                 )
             `
-
+            console.log(queryText);
+            console.log(values);
+            const dbRes = await this.pool.query(queryText, values);            
             return {err: null, data: null};
         } catch (error) {
             return {err: null, data: null}            
         }
-        return {err: null, data: null};
     }
 
     public async update(table:string, infos:object, options?: options) : Promise<repoRes<any[]>> {
-        return {err: null, data: [{username: 'test'}]};
+        try{
+            if(!options){
+                throw new Error('deu ruim, mande um options');
+            }
+            const columns = Object.keys(infos)
+            const columnValue = Object.values(infos)
+            const optionsKeys = Object.keys(options.filter_and);
+            const optionsValues = Object.values(options.filter_and);
+            const dolarValues : string[] = []; 
+            let dolarOptions : string | string[] = []; 
+            for(let i in columns){
+                dolarValues.push(`${columns[i]} = $${parseInt(i) + 1}`) 
+            }
+            const length = dolarValues.length;
+            for(let i in optionsKeys) {
+                dolarOptions.push(`${optionsKeys[i]} = $${parseInt(i) + length + 1}`)
+            }
+            const values = columnValue.concat(optionsValues)
+
+            if(optionsKeys.length > 1) {
+                dolarOptions = dolarOptions.join(' AND ')
+            } else {
+                dolarOptions = dolarOptions.toString()
+            }
+  
+            const queryText = `
+                    UPDATE ${table}
+                    SET ${dolarValues.join(', ')}
+                    WHERE ${dolarOptions}
+                    RETURNING *
+            `
+
+            const dbRes = await this.pool.query(queryText, values);
+
+            console.log(dbRes)
+            return {err: null, data: dbRes.rows[0]};
+        }catch(err){
+            return {err: err as Error, data: null}
+        }
     }
 }
