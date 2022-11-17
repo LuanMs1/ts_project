@@ -41,10 +41,6 @@ export class Postegres {
                     values.push(filter[key]);
                     countValues += 1;
                 }
-                //{"nome": "fulano", "email": "test@gm.com"}
-                // $1 = $3 AND $2 = $4
-                // ["nome", "email", "fulano", "test@gm.com"]
-                // ["$1 = $2", "$3 = $4"].join(' AND ');
                 dolarOptions = dolarOptions.join(" AND ");
                 dolarOptions = `WHERE ${dolarOptions}`;
             }else {
@@ -67,8 +63,26 @@ export class Postegres {
         }
     }
 
-    public insert() {
-        return;
+    public async insert(table:string, infos:object) : Promise<repoRes<any[]>> {
+        try{
+            const columns = Object.keys(infos);
+            const values = Object.values(infos);
+            let dolarValues : string | string[] = []; // Variavel para string $1, $2
+            for(let i in values){
+                dolarValues.push(`$${parseInt(i) + 1}`)
+            }
+            dolarValues = dolarValues.toString();
+
+            const queryText = `
+                    INSERT INTO ${table}(${columns.toString()})
+                    VALUES (${dolarValues})
+                    RETURNING *
+            `
+            const dbRes = await this.pool.query(queryText, values);
+            return {err: null, data: dbRes.rows}
+        }catch(err){
+            return {err: err as Error, data: null}
+        }
     }
 
     public delete() {
