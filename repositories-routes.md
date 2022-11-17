@@ -17,6 +17,9 @@ Database.getMyUser( _idUsuario );
 Database.getUserById( _idUsuario );
     - Pegar qualquer usuário
 
+Database.getUserByEmail( _emailUsuario );
+    - Pegar qualquer usuário por email
+
 Database.postUser( _inputs );
     -Cadastra usuário
     -_inputs:
