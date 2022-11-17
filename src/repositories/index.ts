@@ -1,5 +1,5 @@
 // Arquivo para acesso direto ao banco de dados
-import { Postegres } from "./ORM/index";
+import { Postegres} from "./ORM/index";
 import {
     Usuario,
     Equipe,
@@ -7,6 +7,7 @@ import {
     table,
     uuid,
     repoRes,
+    options
 } from "../interfaces/repositoriesInterfaces.js";
 
 // Futura implementação
@@ -158,10 +159,15 @@ export class Database {
     }
 
     /** Update a user information */
-    public async updateUser(infos: Usuario): Promise<repoRes<Usuario>> {
+    public async updateUser(infos: Usuario, id: uuid): Promise<repoRes<Usuario>> {
         try {
             if (!infos) throw new Error("Necessária informações de usuário");
-            return { err: null, data: infos };
+            const options: options = {
+                filter_and: {id: id},
+            }
+            const res = await this.orm.update('usuario', infos, options);
+            if (res.err) throw res.err;
+            return { err: null, data: res.data as Usuario};
         } catch (err) {
             return { err: err as Error, data: null };
         }
@@ -171,6 +177,10 @@ export class Database {
     public async deleteUser(userId: uuid): Promise<repoRes<table>> {
         try {
             if (!userId) throw new Error("Id necessário");
+            const options: options = {
+                filter_and: {id: userId}
+            }
+            const res = await this.orm.delete('usuario', options)
             return { err: null, data: null };
         } catch (err) {
             return { err: err as Error, data: null };

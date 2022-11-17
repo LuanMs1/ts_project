@@ -1,30 +1,28 @@
 // Arquivo para funções gerais de acesso ao PostegreSQL
 import { Pool, PoolConfig } from "pg";
 import  {repoRes, Usuario}  from "../../interfaces/repositoriesInterfaces";
+import { options } from "../../interfaces/repositoriesInterfaces";
 
-// import * as dotenv from 'dotenv';
-// dotenv.config()
-const poolConfig: PoolConfig = {
-    host: "localhost",
-    port: 5432,
-    database: "db_typescript",
-    user: "postgres",
-    password: "080596",
+import * as dotenv from 'dotenv';
+dotenv.config()
+const poolConfig = {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_DATABASE,
+    user: process.env.DB_USER,
+    password: process.env.PASSWORD,
 };
-interface options<T>{
-    filter_and: T,
-}
 export class Postegres {
     private pool: Pool;
     constructor() {
-        this.pool = new Pool(poolConfig);
+        this.pool = new Pool(poolConfig as PoolConfig);
     }
 
     // métodos para conecção com banco de dados
     public async select(
         table: string,
         columns: Array<string> = ["*"],
-        options?: options<Usuario>
+        options?: options
     ): Promise<repoRes<any[]>> {
         // options = {
         //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
@@ -85,11 +83,31 @@ export class Postegres {
         }
     }
 
-    public delete() {
-        return;
+    public async delete(table:string, options: options) : Promise<repoRes<any[]>> {
+        try {
+            const keys = Object.values(infos)
+            const values = Object.values(infos)
+            let dolarValues = String[]
+            let algumacoisa = ''
+            for(let i in values) {
+                dolarValues.push(`$${parseInt(i) + 1}`)
+            }
+
+            const queryText = `
+                DELETE FROM ${table}
+                WHERE (
+                    ${algumacoisa}
+                )
+            `
+
+            return {err: null, data: null};
+        } catch (error) {
+            return {err: null, data: null}            
+        }
+        return {err: null, data: null};
     }
 
-    public update() {
-        return;
+    public async update(table:string, infos:object, options?: options) : Promise<repoRes<any[]>> {
+        return {err: null, data: [{username: 'test'}]};
     }
 }

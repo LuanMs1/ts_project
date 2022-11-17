@@ -24,5 +24,8 @@ interface repoRes<T> {
     err: Error | null,
     data: T | null, 
 };
+interface options{
+    filter_and: object,
+}
 
-export {Usuario, Equipe, tables, table, uuid, repoRes};
+export {Usuario, Equipe, tables, table, uuid, repoRes, options};
