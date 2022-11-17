@@ -30,7 +30,7 @@ export default async function attUserService(
         if (data.err !== null) {
             throw {
                 status: 500,
-                message: "Erro no banco de dados!",
+                message: data.err.message,
             };
         }
     } catch (error: any) {

@@ -5,4 +5,11 @@ import BooleanValidator from "./booleanValidator.js";
 import LeaderValidator from "./leaderValidator.js";
 import TeamValidator from "./teamValidator.js";
 
-export { EmailValidator, PasswordValidator, StringValidator, BooleanValidator, LeaderValidator, TeamValidator };
+export { 
+    EmailValidator, 
+    PasswordValidator, 
+    StringValidator, 
+    BooleanValidator, 
+    LeaderValidator, 
+    TeamValidator
+ };
