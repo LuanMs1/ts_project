@@ -16,7 +16,7 @@ export default async function register(userData: registerUser) {
         userData.id = id;
 
         const db = new Database();
-        const data = await db.postUser(userData);
+        const data = await db.user.post(userData);
         if (data.err !== null) {
             throw {
                 status: 500,

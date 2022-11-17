@@ -16,14 +16,14 @@ export default async function attTeamService(
 
         teamData.id = teamId;
 
-        // const db = new Database();
-        // const data = await db.updateTeam(teamData);
-        // if (data.err !== null) {
-        //     throw {
-        //         status: 500,
-        //         message: data.err.message,
-        //     };
-        // }
+        const db = new Database();
+        const data = await db.team.update(teamData, teamId);
+        if (data.err !== null) {
+            throw {
+                status: 500,
+                message: data.err.message,
+            };
+        }
     } catch (error: any) {
         throw {
             status: error.status || 500,
