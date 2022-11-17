@@ -159,7 +159,7 @@ export class Postegres {
 
             const dbRes = await this.pool.query(queryText, values);
 
-            return {err: null, data: dbRes.rows[0] || [0]};
+            return {err: null, data: dbRes.rows[0] || 0};
         }catch(err){
             return {err: err as Error, data: null}
         }

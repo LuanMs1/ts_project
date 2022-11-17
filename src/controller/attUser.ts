@@ -8,6 +8,13 @@ export default async function attUser(req: Request, res: Response) {
 
     try {
         const data = await attUserService(userId, userData);
+        console.log(data);
+        if (data === 0) {
+            throw {
+                status: 404,
+                message: "Usuário nao encontrado!",
+            };
+        }
         res.status(200).send(data);
         return;
     } catch (error: any) {
