@@ -23,6 +23,7 @@ export default async function register(userData: registerUser) {
                 message: "Erro no banco de dados!",
             };
         }
+        return;
     } catch (error: any) {
         throw {
             status: error.status || 500,
