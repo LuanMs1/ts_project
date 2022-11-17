@@ -10,7 +10,7 @@ const poolConfig = {
     port: process.env.DB_PORT,
     database: process.env.DB_DATABASE,
     user: process.env.DB_USER,
-    password: '123456',
+    password: process.env.DB_PASSWORD,
 };
 export class Postegres {
     private pool: Pool;
@@ -83,7 +83,7 @@ export class Postegres {
         }
     }
 
-    public async delete(table:string, options: options) : Promise<repoRes<any[]>> {
+    public async delete(table:string, options: options) : Promise<repoRes<number>> {
         try {
             if(!options){
                 throw new Error('deu ruim, mande um options');
@@ -111,8 +111,8 @@ export class Postegres {
             `
             console.log(queryText);
             console.log(values);
-            const dbRes = await this.pool.query(queryText, values);            
-            return {err: null, data: null};
+            const dbRes = await this.pool.query(queryText, values);
+            return {err: null, data: dbRes.rowCount};
         } catch (error) {
             return {err: null, data: null}            
         }
@@ -153,8 +153,7 @@ export class Postegres {
 
             const dbRes = await this.pool.query(queryText, values);
 
-            console.log(dbRes)
-            return {err: null, data: dbRes.rows[0]};
+            return {err: null, data: dbRes.rows[0] || [0]};
         }catch(err){
             return {err: err as Error, data: null}
         }

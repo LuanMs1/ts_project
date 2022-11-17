@@ -12,7 +12,7 @@ import {
 
 // Futura implementação
 abstract class Crud<T> {
-    private table: string;
+    protected table: string;
     protected orm = new Postegres();
     constructor(_table: string) {
         this.table = _table;
@@ -115,16 +115,28 @@ const equipe1: Equipe = {
 
 //Classe para construir os acessos ao banco
 export class Database {
-    private orm = new Postegres();
     constructor() {}
 
     public user = new class extends Crud<Usuario>{
         constructor(){
             super('usuario');
         };
+
+        public async getByEmail(email: string): Promise<repoRes<table>>{
+            try{
+                if (!email) throw new Error('Email necessário');
+                const options:options = {
+                    filter_and: {email: email},
+                }
+                const res = await this.orm.select(this.table, ['*'], options);
+                return {err: null, data: res.data };
+            }catch(err){
+                return {err: err as Error, data: null};
+            }
+        }
     }
 
-    public team : Crud<Equipe> = new class extends Crud<Equipe>{
+    public team = new class extends Crud<Equipe>{
         constructor(){
             super('equipe');
         };
@@ -170,7 +182,7 @@ const db = new Database;
 // db.postTeam(equipe1);
 // db.postUser(user1);
 // db.postUser(user2);
-// db.getUsers().then(res => console.log(res));
+// db.user.getAll().then(res => console.log(res));
 // db.getTeams().then(res => console.log(res));
 // db.deleteTeam('1');
 // db.deleteUser('1a').then(res => console.log(res));
@@ -182,6 +194,7 @@ const db = new Database;
 //     password: "criptografado2",
 //     squad: null,
 //     is_adm: true,
-// }, '2a').then(res => console.log(res));
-
-db.team.getAll().then(res => console.log(res));
+// }, '23a').then(res => console.log(res));
+db.user.getByEmail('teste1@gmail.com').then(res => console.log(res));
+// db.user.del('2a').then(res => console.log(res));
+// db.team.getAll().then(res => console.log(res));
