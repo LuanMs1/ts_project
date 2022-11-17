@@ -9,6 +9,66 @@ import {
     repoRes,
 } from "../interfaces/repositoriesInterfaces.js";
 
+// Futura implementação
+abstract class Access<T> {
+    private table: string;
+    private orm = new Postegres();
+    constructor(_table: string) {
+        this.table = _table;
+    }
+    public async getAll(): Promise<repoRes<table>> {
+        try {
+            // seleciona senha de usuáro a partir de email
+            const res = await this.orm.select(this.table, ["*"]);
+            if (res.err) throw res.err;
+            return { err: null, data: res.data };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+
+    /** Get any user by id. Especific to logged user */
+    public async getById(id: uuid): Promise<repoRes<table>> {
+        try {
+            if (!id) throw new Error("Id necessário");
+            const res = await this.orm.select(this.table, ["*"], {
+                filter_and: { id: id },
+            });
+            return { err: null, data: res.data };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+
+    /** Register user. Information of user required */
+    public async post(infos: T): Promise<repoRes<table>> {
+        try {
+            return { err: null, data: null };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+
+    /** Update a user information */
+    public async update(infos: T): Promise<repoRes<T>> {
+        try {
+            if (!infos) throw new Error("Necessária informações de usuário");
+            return { err: null, data: infos };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+
+    /** delete a user by id */
+    public async del(userId: uuid): Promise<repoRes<table>> {
+        try {
+            if (!userId) throw new Error("Id necessário");
+            return { err: null, data: null };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+}
 // user examples:
 const user1: Usuario = {
     id: "1a",
@@ -28,17 +88,15 @@ const user2: Usuario = {
     first_name: "Fulano2",
     last_name: "cicrano2",
     password: "criptografado",
-    squad: "squadId",
+    squad: null,
     is_adm: true,
 };
 
 //Classe para construir os acessos ao banco
 export class Database {
     private orm = new Postegres();
-    private tables = ["usuario", "equipe"];
     constructor() {}
 
-    /** Get all users in the database */
     public async getUsers(): Promise<repoRes<table>> {
         try {
             // seleciona senha de usuáro a partir de email
@@ -51,11 +109,22 @@ export class Database {
     }
 
     /** Get any user by id. Especific to logged user */
-    public async getMyUsers(userId: uuid): Promise<repoRes<table>> {
+    public async getMyUser(id: uuid): Promise<repoRes<table>> {
         try {
-            if (!userId) throw new Error("Id necessário");
+            if (!id) throw new Error("Id necessário");
             const res = await this.orm.select("usuario", ["*"], {
-                filter_and: { id: userId },
+                filter_and: { id: id },
+            });
+            return { err: null, data: res.data };
+        } catch (err) {
+            return { err: err as Error, data: null };
+        }
+    }
+    public async getUserById(id: uuid): Promise<repoRes<table>> {
+        try {
+            if (!id) throw new Error("Id necessário");
+            const res = await this.orm.select("usuario", ["*"], {
+                filter_and: { id: id },
             });
             return { err: null, data: res.data };
         } catch (err) {
@@ -63,13 +132,13 @@ export class Database {
         }
     }
 
-    /** Get any user by id. */
-    public async getUserById(userId: uuid): Promise<repoRes<table>> {
+    public async getUserByEmail(email: string): Promise<repoRes<table>> {
         try {
-            if (!userId) throw new Error("Id necessário");
+            if (!email) throw new Error("email necessário");
             const res = await this.orm.select("usuario", ["*"], {
-                filter_and: { id: userId },
+                filter_and: { email: email },
             });
+            if (res.err) throw res.err;
             return { err: null, data: res.data };
         } catch (err) {
             return { err: err as Error, data: null };
@@ -79,7 +148,10 @@ export class Database {
     /** Register user. Information of user required */
     public async postUser(infos: Usuario): Promise<repoRes<table>> {
         try {
-            return { err: null, data: null };
+            if (!infos) throw new Error("informações necessárias");
+            const res = await this.orm.insert("usuario", infos);
+            if (res.err) throw res.err;
+            return { err: null, data: res.data };
         } catch (err) {
             return { err: err as Error, data: null };
         }

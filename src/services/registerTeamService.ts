@@ -16,7 +16,7 @@ export default async function register(teamData: registerTeam) {
         // if(data.err !== null) {
         //     throw {
         //         status: 500,
-        //         message: "Erro no banco de dados!",
+        //         message: data.err.message,
         //     };
         // }
         return;
