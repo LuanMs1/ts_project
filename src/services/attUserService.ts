@@ -33,6 +33,7 @@ export default async function attUserService(
                 message: data.err.message,
             };
         }
+        return data.data;
     } catch (error: any) {
         throw {
             status: error.status || 500,

@@ -30,7 +30,4 @@ export const authValidation = (req: tokenValidation, res: Response, next: NextFu
     }
 }
 
-
-
-
 export default { authValidation};

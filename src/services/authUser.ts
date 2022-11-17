@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import * as validator from "../validator/validators.js";
 import { registerUser } from "../interfaces/interfaces.js";
+import { table, Usuario } from "../interfaces/repositoriesInterfaces.js";
 import { Database } from "../repositories/index.js";
 import bcrypt from "bcrypt"; 
 import jwt from "jsonwebtoken";
@@ -9,12 +10,12 @@ dotenv.config();
 
 export default async function login(userData: registerUser) {
     const db = new Database();
-    const { username, password } = userData;
-    const { err, data } = await db.getUsername(username);
-    
+    const { email, password } = userData;
+    const { err, data } = await db.user.getByEmail(email);
+
     if (err) throw new Error(err.message);
     if (!data) throw new Error("Usuário não encontrado");
-    const user = data[0];
+    const user = data as Usuario;
     console.log('user_data:', user.password);
     
     const match = await bcrypt.compare(password, user.password as string);
