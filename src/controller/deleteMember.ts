@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import deleteMemberService from "../services/deleteMemberTeamService";
 
 export default async function deleteMember(req: Request, res: Response) {
-    const memberId: string = req.params.member_id;
+    const memberId: string = req.params.user_id;
 
     try {
         await deleteMemberService(memberId);

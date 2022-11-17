@@ -1,5 +1,5 @@
 // Arquivo para acesso direto ao banco de dados
-import { Postegres} from "./ORM/index";
+import { Postegres } from "./ORM/index";
 import {
     Usuario,
     Equipe,
@@ -7,7 +7,7 @@ import {
     table,
     uuid,
     repoRes,
-    options
+    options,
 } from "../interfaces/repositoriesInterfaces.js";
 
 // Futura implementação
@@ -45,8 +45,8 @@ abstract class Crud<T> {
     /** Register user. Information of user required */
     public async post(infos: T): Promise<repoRes<table>> {
         try {
-            if (!infos) throw new Error('infos necessárias');
-            const res = await this.orm.insert(this.table,infos);
+            if (!infos) throw new Error("infos necessárias");
+            const res = await this.orm.insert(this.table, infos);
             if (res.err) throw res.err;
             return { err: null, data: null };
         } catch (err) {
@@ -58,10 +58,10 @@ abstract class Crud<T> {
     public async update(infos: T, id: uuid): Promise<repoRes<table>> {
         try {
             if (!infos) throw new Error("Necessária informações de usuário");
-            const options : options = {
-                filter_and: {id: id}
+            const options: options = {
+                filter_and: { id: id },
             };
-            const res = await this.orm.update(this.table, infos, options)
+            const res = await this.orm.update(this.table, infos, options);
             if (res.err) throw res.err;
             return { err: null, data: res.data };
         } catch (err) {
@@ -73,9 +73,9 @@ abstract class Crud<T> {
     public async del(userId: uuid): Promise<repoRes<table>> {
         try {
             if (!userId) throw new Error("Id necessário");
-            const options : options = {
-                filter_and: {id:userId},
-            }
+            const options: options = {
+                filter_and: { id: userId },
+            };
             const res = await this.orm.delete(this.table, options);
             if (res.err) throw res.err;
             return { err: null, data: null };
@@ -87,31 +87,31 @@ abstract class Crud<T> {
 // user examples:
 const user1: Usuario = {
     id: "1a",
-    username: "User 1",
+    username: "User1",
     email: "teste1@gmail.com",
     first_name: "Fulano1",
     last_name: "cicrano1",
-    password: "criptografado",
+    password: "$2a$10$7muzcKb4w3qGBGBTTCqmKevDnaO96WhNQCFoIECSy9wn.7idjCpD.", // password
     squad: null,
     is_adm: false,
 };
 
 const user2: Usuario = {
     id: "2a",
-    username: "User 2",
+    username: "User2",
     email: "teste2@gmail.com",
     first_name: "Fulano2",
     last_name: "cicrano2",
-    password: "criptografado",
+    password: "$2a$10$7muzcKb4w3qGBGBTTCqmKevDnaO96WhNQCFoIECSy9wn.7idjCpD.", // password
     squad: null,
     is_adm: true,
 };
 
 const equipe1: Equipe = {
-    leader : "1a",
-    name: 'test',
-    id: '1'
-}
+    leader: "1a",
+    name: "test",
+    id: "1",
+};
 
 //Classe para construir os acessos ao banco
 export class Database {
@@ -142,43 +142,42 @@ export class Database {
         };
         public async postMember(teamId: uuid, userId: uuid): Promise<repoRes<table>>{
             try {
-                if (!teamId || !userId) throw new Error("Id do team e do usuário necessário");
-                
+                if (!teamId || !userId)
+                    throw new Error("Id do team e do usuário necessário");
+
                 const options: options = {
-                    filter_and: {id: userId},
+                    filter_and: { id: userId },
                 };
                 const infos: object = {
                     squad: teamId,
-                }
-                const res = await this.orm.update('usuario', infos, options);
-                return {err: null, data: res.data};
-            }catch(err){
-                return {err: err as Error, data: null}
+                };
+                const res = await this.orm.update("usuario", infos, options);
+                return { err: null, data: res.data };
+            } catch (err) {
+                return { err: err as Error, data: null };
             }
         }
 
-        public async removeMember(userId: uuid): Promise<repoRes<table>>{
+        public async removeMember(userId: uuid): Promise<repoRes<table>> {
             try {
                 if (!userId) throw new Error("Id do usuário necessário");
-                
+
                 const options: options = {
-                    filter_and: {id: userId},
+                    filter_and: { id: userId },
                 };
                 const infos: object = {
                     squad: null,
-                }
-                const res = await this.orm.update('usuario', infos, options);
-                return {err: null, data: res.data};
-            }catch(err){
-                return {err: err as Error, data: null}
+                };
+                const res = await this.orm.update("usuario", infos, options);
+                return { err: null, data: res.data };
+            } catch (err) {
+                return { err: err as Error, data: null };
             }
         }
-    }
-
+    };
 }
 
-
-const db = new Database;
+const db = new Database();
 // db.postTeam(equipe1);
 // db.postUser(user1);
 // db.postUser(user2);

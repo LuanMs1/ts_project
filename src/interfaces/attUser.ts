@@ -5,5 +5,5 @@ export default interface attUser {
     last_name?: string;
     password?: string;
     squad?: string;
-    is_admin?: boolean;
+    is_adm?: boolean;
 }
