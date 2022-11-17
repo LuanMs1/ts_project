@@ -94,7 +94,6 @@ const user2: Usuario = {
 //Classe para construir os acessos ao banco
 export class Database {
     private orm = new Postegres();
-    private tables = ["usuario", "equipe"];
     constructor() {}
 
     public async getUsers(): Promise<repoRes<table>> {
