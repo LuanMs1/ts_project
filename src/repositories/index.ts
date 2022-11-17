@@ -87,22 +87,22 @@ abstract class Crud<T> {
 // user examples:
 const user1: Usuario = {
     id: "1a",
-    username: "User 1",
+    username: "User1",
     email: "teste1@gmail.com",
     first_name: "Fulano1",
     last_name: "cicrano1",
-    password: "criptografado",
+    password: "$2a$10$7muzcKb4w3qGBGBTTCqmKevDnaO96WhNQCFoIECSy9wn.7idjCpD.", // password
     squad: null,
     is_adm: false,
 };
 
 const user2: Usuario = {
     id: "2a",
-    username: "User 2",
+    username: "User2",
     email: "teste2@gmail.com",
     first_name: "Fulano2",
     last_name: "cicrano2",
-    password: "criptografado",
+    password: "$2a$10$7muzcKb4w3qGBGBTTCqmKevDnaO96WhNQCFoIECSy9wn.7idjCpD.", // password
     squad: null,
     is_adm: true,
 };
