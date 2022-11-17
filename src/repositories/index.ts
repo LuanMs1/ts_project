@@ -10,32 +10,33 @@ import {
 } from "../interfaces/repositoriesInterfaces.js";
 
 // Futura implementação
-abstract class Access<T>{
-    private table : string;
-    private orm = new Postegres;
-    constructor(_table:string){
+abstract class Access<T> {
+    private table: string;
+    private orm = new Postegres();
+    constructor(_table: string) {
         this.table = _table;
     }
     public async getAll(): Promise<repoRes<table>> {
         try {
             // seleciona senha de usuáro a partir de email
-            const res  = await this.orm.select(this.table, ['*']);
+            const res = await this.orm.select(this.table, ["*"]);
             if (res.err) throw res.err;
-            return { err: null, data: res.data};
-        }catch(err){
-            return {err: err as Error, data: null};
+            return { err: null, data: res.data };
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 
     /** Get any user by id. Especific to logged user */
-    public async getById( id : uuid ): Promise<repoRes<table>>{
-
-        try{
-            if (!id) throw new Error('Id necessário');
-            const res = await this.orm.select(this.table, ['*'], {filter_and: {'id' : id}})
+    public async getById(id: uuid): Promise<repoRes<table>> {
+        try {
+            if (!id) throw new Error("Id necessário");
+            const res = await this.orm.select(this.table, ["*"], {
+                filter_and: { id: id },
+            });
             return { err: null, data: res.data };
-        }catch(err){
-            return {err: err as Error, data: null};
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 
@@ -108,32 +109,35 @@ export class Database {
     }
 
     /** Get any user by id. Especific to logged user */
-    public async getMyUser( id : uuid ): Promise<repoRes<table>>{
-
-        try{
-            if (!id) throw new Error('Id necessário');
-            const res = await this.orm.select('usuario', ['*'], {filter_and: {'id' : id}})
+    public async getMyUser(id: uuid): Promise<repoRes<table>> {
+        try {
+            if (!id) throw new Error("Id necessário");
+            const res = await this.orm.select("usuario", ["*"], {
+                filter_and: { id: id },
+            });
             return { err: null, data: res.data };
-        }catch(err){
-            return {err: err as Error, data: null};
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
-    public async getUserById( id : uuid ): Promise<repoRes<table>>{
-
-        try{
-            if (!id) throw new Error('Id necessário');
-            const res = await this.orm.select('usuario', ['*'], {filter_and: {'id' : id}})
+    public async getUserById(id: uuid): Promise<repoRes<table>> {
+        try {
+            if (!id) throw new Error("Id necessário");
+            const res = await this.orm.select("usuario", ["*"], {
+                filter_and: { id: id },
+            });
             return { err: null, data: res.data };
         } catch (err) {
             return { err: err as Error, data: null };
         }
     }
 
-    public async getUserByEmail( email : string ): Promise<repoRes<table>>{
-
-        try{
-            if (!email) throw new Error('email necessário');
-            const res = await this.orm.select('usuario', ['*'], {filter_and: {'email' : email}});
+    public async getUserByEmail(email: string): Promise<repoRes<table>> {
+        try {
+            if (!email) throw new Error("email necessário");
+            const res = await this.orm.select("usuario", ["*"], {
+                filter_and: { email: email },
+            });
             if (res.err) throw res.err;
             return { err: null, data: res.data };
         } catch (err) {
@@ -144,8 +148,8 @@ export class Database {
     /** Register user. Information of user required */
     public async postUser(infos: Usuario): Promise<repoRes<table>> {
         try {
-            if (!infos) throw new Error ('informações necessárias');
-            const res = await this.orm.insert('usuario', infos);
+            if (!infos) throw new Error("informações necessárias");
+            const res = await this.orm.insert("usuario", infos);
             if (res.err) throw res.err;
             return { err: null, data: res.data };
         } catch (err) {
