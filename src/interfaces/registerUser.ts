@@ -6,5 +6,5 @@ export default interface registerUser {
     last_name: string;
     password: string;
     squad?: string;
-    is_admin: boolean;
+    is_adm: boolean;
 }

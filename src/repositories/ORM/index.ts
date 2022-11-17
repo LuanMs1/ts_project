@@ -1,6 +1,6 @@
 // Arquivo para funções gerais de acesso ao PostegreSQL
 import { Pool, PoolConfig } from "pg";
-import  {repoRes, Usuario}  from "../../interfaces/repositoriesInterfaces";
+import { repoRes, Usuario } from "../../interfaces/repositoriesInterfaces";
 
 // import * as dotenv from 'dotenv';
 // dotenv.config()
@@ -9,10 +9,10 @@ const poolConfig: PoolConfig = {
     port: 5432,
     database: "db_typescript",
     user: "postgres",
-    password: "080596",
+    password: "123",
 };
-interface options<T>{
-    filter_and: T,
+interface options<T> {
+    filter_and: T;
 }
 export class Postegres {
     private pool: Pool;
@@ -31,11 +31,11 @@ export class Postegres {
         // }
         try {
             const values: Array<string> = [];
-            let dolarOptions : Array<string> | string = [];
+            let dolarOptions: Array<string> | string = [];
             if (options) {
                 let countValues = values.length + 1;
-                const filter : any = options.filter_and;
-                for (let key in filter){
+                const filter: any = options.filter_and;
+                for (let key in filter) {
                     dolarOptions.push(`${key} = $${countValues}`);
                     // ["key = $4"]
                     values.push(filter[key]);
@@ -43,7 +43,7 @@ export class Postegres {
                 }
                 dolarOptions = dolarOptions.join(" AND ");
                 dolarOptions = `WHERE ${dolarOptions}`;
-            }else {
+            } else {
                 dolarOptions = "";
             }
             const queryText = `
@@ -53,8 +53,8 @@ export class Postegres {
             `;
             const qr = {
                 text: queryText,
-                values: values
-            }
+                values: values,
+            };
 
             const dbRes = await this.pool.query(qr);
             return { err: null, data: dbRes.rows };
@@ -63,13 +63,13 @@ export class Postegres {
         }
     }
 
-    public async insert(table:string, infos:object) : Promise<repoRes<any[]>> {
-        try{
+    public async insert(table: string, infos: object): Promise<repoRes<any[]>> {
+        try {
             const columns = Object.keys(infos);
             const values = Object.values(infos);
-            let dolarValues : string | string[] = []; // Variavel para string $1, $2
-            for(let i in values){
-                dolarValues.push(`$${parseInt(i) + 1}`)
+            let dolarValues: string | string[] = []; // Variavel para string $1, $2
+            for (let i in values) {
+                dolarValues.push(`$${parseInt(i) + 1}`);
             }
             dolarValues = dolarValues.toString();
 
@@ -77,11 +77,11 @@ export class Postegres {
                     INSERT INTO ${table}(${columns.toString()})
                     VALUES (${dolarValues})
                     RETURNING *
-            `
+            `;
             const dbRes = await this.pool.query(queryText, values);
-            return {err: null, data: dbRes.rows}
-        }catch(err){
-            return {err: err as Error, data: null}
+            return { err: null, data: dbRes.rows };
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 

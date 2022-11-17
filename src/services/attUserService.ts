@@ -19,8 +19,8 @@ export default async function attUserService(
         if (userData.last_name !== undefined) {
             new validator.StringValidator(userData.last_name, "last_name");
         }
-        if (userData.is_admin !== undefined) {
-            new validator.BooleanValidator(userData.is_admin);
+        if (userData.is_adm !== undefined) {
+            new validator.BooleanValidator(userData.is_adm);
         }
 
         userData.id = userId;
