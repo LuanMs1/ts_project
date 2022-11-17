@@ -1,5 +1,5 @@
 // Arquivo para acesso direto ao banco de dados
-import { Postegres } from "./ORM/index"
+import { Postegres } from "./ORM/index";
 import {
     Usuario,
     Equipe,
@@ -100,11 +100,11 @@ export class Database {
     public async getUsers(): Promise<repoRes<table>> {
         try {
             // seleciona senha de usuáro a partir de email
-            const res  = await this.orm.select('usuario', ['*']);
+            const res = await this.orm.select("usuario", ["*"]);
             if (res.err) throw res.err;
-            return { err: null, data: res.data};
-        }catch(err){
-            return {err: err as Error, data: null};
+            return { err: null, data: res.data };
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 
@@ -125,8 +125,8 @@ export class Database {
             if (!id) throw new Error('Id necessário');
             const res = await this.orm.select('usuario', ['*'], {filter_and: {'id' : id}})
             return { err: null, data: res.data };
-        }catch(err){
-            return {err: err as Error, data: null};
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 
@@ -137,8 +137,8 @@ export class Database {
             const res = await this.orm.select('usuario', ['*'], {filter_and: {'email' : email}});
             if (res.err) throw res.err;
             return { err: null, data: res.data };
-        }catch(err){
-            return {err: err as Error, data: null};
+        } catch (err) {
+            return { err: err as Error, data: null };
         }
     }
 
