@@ -1,5 +1,5 @@
 // Arquivo para acesso direto ao banco de dados
-import { Postegres } from "./ORM/index.js";
+import { Postegres } from "./ORM/index"
 import {
     Usuario,
     Equipe,
@@ -42,31 +42,35 @@ export class Database {
     public async getUsers(): Promise<repoRes<table>> {
         try {
             // seleciona senha de usuáro a partir de email
-            const res = this.orm.select("usuario", ["*"]);
-
-            return { err: null, data: [user1, user2] };
-        } catch (err) {
-            return { err: err as Error, data: null };
+            const res  = await this.orm.select("usuario", ['*']);
+            if (res.err) throw res.err;
+            return { err: null, data: res.data};
+        }catch(err){
+            return {err: err as Error, data: null};
         }
     }
 
     /** Get any user by id. Especific to logged user */
-    public async getMyUsers(userId: uuid): Promise<repoRes<table>> {
-        try {
-            if (!userId) throw new Error("Id necessário");
-            return { err: null, data: [user1] };
-        } catch (err) {
-            return { err: err as Error, data: null };
+    public async getMyUsers( userId : uuid ): Promise<repoRes<table>>{
+
+        try{
+            if (!userId) throw new Error('Id necessário');
+            const res = await this.orm.select("usuario", ['*'], {filter_and: {'id' : userId}})
+            return { err: null, data: res.data };
+        }catch(err){
+            return {err: err as Error, data: null};
         }
     }
 
     /** Get any user by id. */
-    public async getUserById(userId: uuid): Promise<repoRes<table>> {
-        try {
-            if (!userId) throw new Error("Id necessário");
-            return { err: null, data: [user1] };
-        } catch (err) {
-            return { err: err as Error, data: null };
+    public async getUserById( userId : uuid ): Promise<repoRes<table>>{
+
+        try{
+            if (!userId) throw new Error('Id necessário');
+            const res = await this.orm.select("usuario", ['*'], {filter_and: {'id' : userId}})
+            return { err: null, data: res.data };
+        }catch(err){
+            return {err: err as Error, data: null};
         }
     }
 
