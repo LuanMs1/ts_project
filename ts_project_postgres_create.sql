@@ -12,7 +12,7 @@ CREATE TABLE "equipe" (
 CREATE TABLE "usuario" (
 	"id" varchar(255) NOT NULL,
 	"username" varchar(255) NOT NULL,
-	"email" varchar(255) NOT NULL,
+	"email" varchar(255) UNIQUE NOT NULL,
 	"first_name" varchar(255) NOT NULL,
 	"last_name" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,

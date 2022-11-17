@@ -10,7 +10,7 @@ export default async function register(userData: registerUser) {
         new validator.PasswordValidator(userData.password);
         new validator.StringValidator(userData.first_name, "first_name");
         new validator.StringValidator(userData.last_name, "last_name");
-        new validator.BooleanValidator(userData.is_admin);
+        new validator.BooleanValidator(userData.is_adm);
 
         const id = uuid();
         userData.id = id;
