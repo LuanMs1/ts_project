@@ -1,6 +1,7 @@
 // Arquivo para funções gerais de acesso ao PostegreSQL
 import { Pool, PoolConfig } from "pg";
-import { repoRes } from "../../interfaces/repositoriesInterfaces.js";
+import  {repoRes, Usuario}  from "../../interfaces/repositoriesInterfaces";
+
 // import * as dotenv from 'dotenv';
 // dotenv.config()
 const poolConfig: PoolConfig = {
@@ -10,12 +11,8 @@ const poolConfig: PoolConfig = {
     user: "postgres",
     password: "080596",
 };
-interface usuario {
-    nome?: string;
-    password?: string | null;
-}
-interface options<T> {
-    filter_and: T;
+interface options<T>{
+    filter_and: T,
 }
 export class Postegres {
     private pool: Pool;
@@ -27,53 +24,41 @@ export class Postegres {
     public async select(
         table: string,
         columns: Array<string> = ["*"],
-        options?: options<usuario>
+        options?: options<Usuario>
     ): Promise<repoRes<any[]>> {
         // options = {
         //     filter_and: {"nome": "fulano", "email": "test@gm.com"},
         // }
         try {
             const values: Array<string> = [];
-            const columnSize = columns.length;
-            let dolarColumns: any | string = []; // [$1, $2]
-            for (let i = 0; i < columnSize; i++) {
-                dolarColumns.push(`$${i + 1} `);
-            }
-            dolarColumns = dolarColumns.toString();
-            values.push(...columns);
-            let dolarOptions: Array<string> | string = [];
-
+            let dolarOptions : Array<string> | string = [];
             if (options) {
                 let countValues = values.length + 1;
-                const filter: any = options.filter_and;
-                const optionsKeys = Object.keys(filter);
-                const optionsValues = Object.values(filter);
-                for (let key in filter) {
-                    dolarOptions.push(`$${countValues} = $${countValues + 1}`);
-                    // ["$3 = $4"]
-                    values.push(key);
-                    values.push(...filter[key]);
-                    countValues += 2;
+                const filter : any = options.filter_and;
+                for (let key in filter){
+                    dolarOptions.push(`${key} = $${countValues}`);
+                    // ["key = $4"]
+                    values.push(filter[key]);
+                    countValues += 1;
                 }
                 //{"nome": "fulano", "email": "test@gm.com"}
                 // $1 = $3 AND $2 = $4
                 // ["nome", "email", "fulano", "test@gm.com"]
                 // ["$1 = $2", "$3 = $4"].join(' AND ');
+                dolarOptions = dolarOptions.join(" AND ");
+                dolarOptions = `WHERE ${dolarOptions}`;
+            }else {
+                dolarOptions = "";
             }
-            dolarOptions = dolarOptions.join(" AND ");
-            console.log(dolarOptions);
-            console.log(values);
             const queryText = `
-                SELECT ${dolarColumns}
+                SELECT ${columns.toString()}
                 FROM ${table}
-                WHERE ${dolarOptions}
+                ${dolarOptions}
             `;
             const qr = {
                 text: queryText,
-                values: values,
-            };
-            console.log(queryText);
-            console.log(values);
+                values: values
+            }
 
             const dbRes = await this.pool.query(qr);
             return { err: null, data: dbRes.rows };
@@ -94,5 +79,3 @@ export class Postegres {
         return;
     }
 }
-// const orm = new Postegres;
-// orm.select('usuario', ["username", "email"], {filter_and: {nome: "test", password: "1234"}}).then(res => console.log(res));
