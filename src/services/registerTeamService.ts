@@ -18,6 +18,13 @@ export default async function register(teamData: registerTeam) {
                 message: data.err.message,
             };
         }
+        const data2 = await db.team.postMember(teamData.id, teamData.leader);
+        if (data2.err !== null) {
+            throw {
+                status: 500,
+                message: data2.err.message,
+            };
+        }
         return;
     } catch (error: any) {
         throw {
