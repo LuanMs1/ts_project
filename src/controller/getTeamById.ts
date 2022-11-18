@@ -3,9 +3,11 @@ import getTeamByIdService from "../services/getTeamByIdService.js";
 import validation from "../middleware/validation.js";
 
 export default async function getTeamById(req: Request, res: Response) {
-    const teamId: string = req.params.team_id;
+    const teamId: string = req.params.team;
 
     try {
+        await validation(req, res);
+
         const data = await getTeamByIdService(teamId);
         if (data.length === 0) {
             throw {

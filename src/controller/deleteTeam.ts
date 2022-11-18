@@ -6,7 +6,7 @@ export default async function deleteTeam(req: Request, res: Response) {
     const teamId: string = req.params.team_id;
 
     try {
-        const { is_adm }: any = validation(req, res);
+        const { is_adm }: any = await validation(req, res);
         if (!is_adm) {
             throw {
                 status: 401,

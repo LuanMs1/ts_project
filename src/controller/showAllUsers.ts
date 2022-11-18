@@ -5,7 +5,7 @@ import { request } from "http";
 
 export default async function showAllUsers(req: Request, res: Response) {
     try {
-        const { is_adm }: any = validation(req, res);
+        const { is_adm }: any = await validation(req, res);
         if (!is_adm) {
             throw {
                 status: 401,

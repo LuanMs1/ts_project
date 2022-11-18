@@ -7,13 +7,14 @@ export default async function registerTeam(req: Request, res: Response) {
     const teamData: registerTeam = req.body;
 
     try {
-        const { is_adm }: any = validation(req, res);
+        const { is_adm }: any = await validation(req, res);
         if (!is_adm) {
             throw {
                 status: 401,
                 message: "Não autorizado!",
             };
         }
+
         await register(teamData);
         res.status(201).send("Time cadastrado com sucesso!");
         return;

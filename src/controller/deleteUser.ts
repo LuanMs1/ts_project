@@ -6,7 +6,7 @@ export default async function deleteUser(req: Request, res: Response) {
     const userId: string = req.params.user_id;
 
     try {
-        const { is_adm }: any = validation(req, res);
+        const { is_adm }: any = await validation(req, res);
         if (!is_adm) {
             throw {
                 status: 401,

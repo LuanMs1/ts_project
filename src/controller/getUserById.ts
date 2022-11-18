@@ -6,8 +6,8 @@ export default async function getUserById(req: Request, res: Response) {
     const userId: string = req.params.user_id;
 
     try {
-        const { is_adm }: any = validation(req, res);
-        if (!is_adm) {
+        const { is_adm, is_leader }: any = await validation(req, res);
+        if (!is_adm && !is_leader) {
             throw {
                 status: 401,
                 message: "Não autorizado!",
