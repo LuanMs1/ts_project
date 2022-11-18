@@ -7,7 +7,7 @@ export default async function deleteMemberService(memberId: string) {
         if (data.err !== null) {
             throw data.err;
         }
-        return;
+        return data.data;
     } catch (error: any) {
         throw {
             message: error.message,

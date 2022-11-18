@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import { v4 as uuid } from "uuid";
+import cookieParser from "cookie-parser";
 import session from "express-session"; // express-session is a middleware that allows us to manage sessions in express applications
 // import FileStore from 'session-file-store';
 import bodyParser from "body-parser";
@@ -22,6 +23,7 @@ passport.serializeUser((user: any, done) => {
 const app = express();
 
 // middleware
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false })); //we ate using extended: false because we are not using nested objects in our request body
 app.use(cors());

@@ -78,7 +78,7 @@ abstract class Crud<T> {
             };
             const res = await this.orm.delete(this.table, options);
             if (res.err) throw res.err;
-            return { err: null, data: null };
+            return { err: null, data: res.data as number };
         } catch (err) {
             return { err: err as Error, data: null };
         }
@@ -117,30 +117,33 @@ const equipe1: Equipe = {
 export class Database {
     constructor() {}
 
-    public user = new class extends Crud<Usuario>{
-        constructor(){
-            super('usuario');
-        };
+    public user = new (class extends Crud<Usuario> {
+        constructor() {
+            super("usuario");
+        }
 
-        public async getByEmail(email: string): Promise<repoRes<table>>{
-            try{
-                if (!email) throw new Error('Email necessário');
-                const options:options = {
-                    filter_and: {email: email},
-                }
-                const res = await this.orm.select(this.table, ['*'], options);
-                return {err: null, data: res.data };
-            }catch(err){
-                return {err: err as Error, data: null};
+        public async getByEmail(email: string): Promise<repoRes<table>> {
+            try {
+                if (!email) throw new Error("Email necessário");
+                const options: options = {
+                    filter_and: { email: email },
+                };
+                const res = await this.orm.select(this.table, ["*"], options);
+                return { err: null, data: res.data };
+            } catch (err) {
+                return { err: err as Error, data: null };
             }
         }
-    }
+    })();
 
-    public team = new class extends Crud<Equipe>{
-        constructor(){
-            super('equipe');
-        };
-        public async postMember(teamId: uuid, userId: uuid): Promise<repoRes<table>>{
+    public team = new (class extends Crud<Equipe> {
+        constructor() {
+            super("equipe");
+        }
+        public async postMember(
+            teamId: uuid,
+            userId: uuid
+        ): Promise<repoRes<table>> {
             try {
                 if (!teamId || !userId)
                     throw new Error("Id do team e do usuário necessário");
@@ -174,7 +177,7 @@ export class Database {
                 return { err: err as Error, data: null };
             }
         }
-    };
+    })();
 }
 
 const db = new Database();
@@ -194,6 +197,6 @@ const db = new Database();
 //     squad: null,
 //     is_adm: true,
 // }, '23a').then(res => console.log(res));
-db.user.getByEmail('teste1@gmail.com').then(res => console.log(res));
+db.user.getByEmail("teste1@gmail.com").then((res) => console.log(res));
 // db.user.del('2a').then(res => console.log(res));
 // db.team.getAll().then(res => console.log(res));
