@@ -6,6 +6,12 @@ export default async function getTeamById(req: Request, res: Response) {
 
     try {
         const data = await getTeamByIdService(teamId);
+        if (data.length === 0) {
+            throw {
+                status: 404,
+                message: "Time não encontrado!",
+            };
+        }
         res.status(200).send(data);
         return;
     } catch (error: any) {

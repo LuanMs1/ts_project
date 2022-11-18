@@ -6,6 +6,12 @@ export default async function getUserById(req: Request, res: Response) {
 
     try {
         const data = await getUserByIdService(userId);
+        if (data.length === 0) {
+            throw {
+                status: 404,
+                message: "Usuário não encontrado!",
+            };
+        }
         res.status(200).send(data);
         return;
     } catch (error: any) {

@@ -24,6 +24,7 @@ export default async function attTeamService(
                 message: data.err.message,
             };
         }
+        return data.data;
     } catch (error: any) {
         throw {
             status: error.status || 500,
