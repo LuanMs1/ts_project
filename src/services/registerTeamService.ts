@@ -6,17 +6,23 @@ import { Database } from "../repositories/index.js";
 export default async function register(teamData: registerTeam) {
     try {
         new validator.TeamValidator(teamData.name, "name");
-        new validator.LeaderValidator(teamData.leader, "leader");
 
         const id = uuid();
         teamData.id = id;
 
         const db = new Database();
         const data = await db.team.post(teamData);
-        if(data.err !== null) {
+        if (data.err !== null) {
             throw {
                 status: 500,
                 message: data.err.message,
+            };
+        }
+        const data2 = await db.team.postMember(teamData.id, teamData.leader);
+        if (data2.err !== null) {
+            throw {
+                status: 500,
+                message: data2.err.message,
             };
         }
         return;

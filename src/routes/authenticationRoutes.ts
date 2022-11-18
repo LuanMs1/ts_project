@@ -78,14 +78,18 @@ auth.get("/login", (req, res) => {
 });
 
 auth.post("/login", async (req, res, next) => {
-    console.log("Inside POST /login callback function");
-    let { user, token } = await login(req.body);
-    // console.log("user:", user);
-    console.log("token: ", token);
-    res.cookie("token", token);
-    res.send(`You posted to the login page!\n`);
-    if (!user) {
-        return res.redirect("/login");
+    try {
+        console.log("Inside POST /login callback function");
+        let { user, token } = await login(req.body);
+        // console.log("user:", user);
+        console.log("token: ", token);
+        res.cookie("token", token);
+        res.send(`You posted to the login page!\n`);
+        if (!user) {
+            return res.redirect("/login");
+        }
+    } catch (error: any) {
+        res.status(error.status || 500).send(error.message || "oi");
     }
 });
 
