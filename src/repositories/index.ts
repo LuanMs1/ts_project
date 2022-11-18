@@ -134,6 +134,28 @@ export class Database {
                 return { err: err as Error, data: null };
             }
         }
+
+        public async setTeam(
+            userId: uuid,
+            teamId: uuid
+        ): Promise<repoRes<table>> {
+            try {
+                if (!userId || !teamId)
+                    throw new Error("id de usuário e email de time necessário");
+                const options: options = {
+                    filter_and: { id: userId },
+                };
+                const infos: Usuario = {
+                    squad: teamId,
+                };
+                const res = await this.orm.update(this.table, infos, options);
+                if (res.err) throw res.err;
+
+                return { err: null, data: res.data };
+            } catch (err) {
+                return { err: err as Error, data: null };
+            }
+        }
     })();
 
     public team = new (class extends Crud<Equipe> {
